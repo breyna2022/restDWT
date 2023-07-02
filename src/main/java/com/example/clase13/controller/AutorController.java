@@ -12,8 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +35,7 @@ public class AutorController {
     public List<Autor> index(){
         return aservice.readAll();
     }
-    @GetMapping("/listar/{id}")
+    @GetMapping("/autor/{id}")
     public ResponseEntity<Autor> autorId(@PathVariable Integer id){
         try {
             Autor autor = aservice.read(id);
@@ -41,10 +45,23 @@ public class AutorController {
         }
         
     }
-    /*
-    @PostMapping("/save")
-    public String save(@Validated @ModelAttribute Autor autor, BindingResult result, Model model, RedirectAttributes attributes){
+    @PostMapping("/autor")
+    public void saveAutor(@RequestBody Autor autor){
         aservice.create(autor);
-        return "redirect:/autores/listar";
-    }*/
+    }
+    @DeleteMapping("/autor/{id}")
+    public void deleteAutor(@PathVariable Integer id){
+        aservice.delete(id);
+    }
+
+    @PutMapping("/autor/{id}")
+    public ResponseEntity<?> updateAutor(@RequestBody Autor autor, @PathVariable Integer id){
+        try {
+            //Autor autor1 = aservice.read(id);
+            aservice.update(autor);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
